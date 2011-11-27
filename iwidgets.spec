@@ -85,9 +85,6 @@ mv -f $RPM_BUILD_ROOT%{_ulibdir}/iwidgets%{version}/demos/* \
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-p /sbin/ldconfig
-%postun	-p /sbin/ldconfig
-
 %files
 %defattr(644,root,root,755)
 %doc CHANGES ChangeLog README license.terms
