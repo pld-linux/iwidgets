@@ -1,0 +1,28 @@
+--- iwidgets/configure.in.orig	2005-04-11 22:34:09.000000000 +0200
++++ iwidgets/configure.in	2011-11-27 14:28:03.725046782 +0100
+@@ -35,20 +35,12 @@
+ #--------------------------------------------------------------------
+ 
+ AC_ARG_WITH(itcl, [  --with-itcl=DIR         use Itcl 3.0 binaries from DIR],
+-        itcl_search=$withval, itcl_search=`cd ${srcdir}/..; pwd`)
++        itcl_search=$withval, itcl_search=$libdir)
+ 
+-ITCL_LIB_DIR=""
+-if test -r $itcl_search/itcl/library/itcl.tcl \
+-	-a -r $itcl_search/itk/library/itk.tcl; then
+-    ITCL_LIB_DIR=$itcl_search/itcl/library
+-    ITCL_SRC_DIR=$itcl_search/itcl
+-    ITK_LIB_DIR=$itcl_search/itk/library
+-    ITK_SRC_DIR=$itcl_search/itk
+-fi
+-
+-if test -z "$ITCL_LIB_DIR"; then
+-    AC_MSG_ERROR([Can't find Itcl source.  Use --with-itcl to specify the the toplevel [incr Tcl] directory on your system.  This directory should contain itcl/library/itcl.tcl, itk/library/itk.tcl.])
+-fi
++ITCL_LIB_DIR="$itcl_search"
++ITCL_SRC_DIR="$itcl_search"
++ITK_LIB_DIR="$itcl_search"
++ITK_SRC_DIR="$itcl_search"
+ 
+ #--------------------------------------------------------------------
+ # Handle the --prefix=... option by defaulting to what Tcl gave.
