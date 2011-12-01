@@ -14,8 +14,8 @@ URL:		http://incrtcl.sourceforge.net/iwidgets/index.html
 BuildRequires:	autoconf >= 2.13
 BuildRequires:	tcl >= 8.4.6
 BuildRequires:	tk >= 8.4.6
-Requires:	itcl >= 3.2
-Requires:	itk >= 3.2
+Requires:	itcl >= 3.4.1
+Requires:	itk >= 3.4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
