@@ -1,28 +1,19 @@
-#
-# Conditional build:
-%bcond_with	examples	# examples (not present in 4.1 snapshots)
-#
 Summary:	[incr Widgets] - object-oriented widget set based in [incr Tcl] and [incr Tk]
 Summary(pl.UTF-8):	[incr Widgets] - zbiór obiektowo zorientowanych widgetów opartych na [incr Tcl] i [incr Tk]
 Name:		iwidgets
-Version:	4.1
-%define snap	20120928
-Release:	0.%{snap}.1
+Version:	4.1.1
+Release:	1
 License:	BSD-like
 Group:		Development/Languages/Tcl
-#Source0:	http://downloads.sourceforge.net/incrtcl/iwidgets%{iwidgets_version}.tar.gz
-# http://core.tcl.tk/iwidgets - iwidgets for itcl/itk 4
-Source0:	http://downloads.sourceforge.net/kbskit/iwidgets41.tgz
-# Source0-md5:	5a60ec284bd8095c665287215ff2a69f
+Source0:	http://downloads.sourceforge.net/incrtcl/%{name}-%{version}.tar.gz
+# Source0-md5:	cca62e022b0d561a2bba19bd56ecc667
+Patch0:		%{name}-nosrc.patch
 URL:		http://incrtcl.sourceforge.net/iwidgets/index.html
 BuildRequires:	autoconf >= 2.13
 BuildRequires:	tcl >= 8.6
 BuildRequires:	tk >= 8.6
 Requires:	itcl >= 4.0
 Requires:	itk >= 4.0
-%if %{without examples}
-Obsoletes:	iwidgets-examples
-%endif
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -68,21 +59,30 @@ Examples for iwidgets.
 Przykłady dla biblioteki iwidgets.
 
 %prep
-%setup -q -n %{name}%{version}
+%setup -q
+%patch0 -p1
+
+%build
+%{__autoconf}
+%configure \
+	--libdir=%{_ulibdir}
+
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_ulibdir}/iwidgets%{version}
 
-cp -p library/* $RPM_BUILD_ROOT%{_ulibdir}/iwidgets%{version}
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 ln -sf %{_ulibdir}/iwidgets%{version} $RPM_BUILD_ROOT%{_ulibdir}/iwidgets
 
-%if %{with examples}
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 %{__mv} $RPM_BUILD_ROOT%{_ulibdir}/iwidgets%{version}/demos/* \
 	$RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
-%endif
+
+# packaged as %doc
+%{__rm} $RPM_BUILD_ROOT%{_ulibdir}/iwidgets%{version}/license.terms
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -92,14 +92,11 @@ rm -rf $RPM_BUILD_ROOT
 %doc README license.terms
 %{_ulibdir}/iwidgets
 %dir %{_ulibdir}/iwidgets%{version}
-%{_ulibdir}/iwidgets%{version}/*.itcl
-%{_ulibdir}/iwidgets%{version}/*.itk
-%{_ulibdir}/iwidgets%{version}/unknownimage.gif
+%{_ulibdir}/iwidgets%{version}/scripts
+%{_ulibdir}/iwidgets%{version}/iwidgets.tcl
 %{_ulibdir}/iwidgets%{version}/pkgIndex.tcl
-%{_ulibdir}/iwidgets%{version}/tclIndex
+%{_mandir}/mann/iwidgets_*.n*
 
-%if %{with examples}
 %files examples
 %defattr(644,root,root,755)
 %{_examplesdir}/%{name}-%{version}
-%endif
